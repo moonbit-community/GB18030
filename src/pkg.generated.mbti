@@ -1,0 +1,59 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "0Ayachi0/GB18030"
+
+// Values
+pub fn contains_chinese(String) -> Bool
+
+pub fn count_ascii_chars(String) -> Int
+
+pub fn count_chinese_chars(String) -> Int
+
+pub fn decode(Array[Int]) -> Int raise
+
+pub fn decode_to_array(Array[Int]) -> Array[Char] raise
+
+pub fn decode_to_iter(Array[Int]) -> Iter[Char] raise
+
+pub fn decode_to_string(Array[Int]) -> String raise
+
+pub fn encode(String) -> Int
+
+pub fn encode_from_array(Array[Char]) -> Array[Int]
+
+pub fn encode_from_iter(Iter[Char]) -> Array[Int]
+
+pub fn encode_from_string(String) -> Array[Int]
+
+pub fn gb18030_to_unicode(Int) -> Int
+
+pub fn get_gb18030_length(String) -> Int
+
+pub fn is_ascii(Int) -> Bool
+
+pub fn is_gb18030_lead(Int) -> Bool
+
+pub fn is_gb18030_trail(Int) -> Bool
+
+pub fn is_valid_gb18030(Array[Int]) -> Bool
+
+pub fn test_ascii_check() -> Bool
+
+pub fn test_basic_functionality() -> Bool
+
+pub fn test_gb18030_check() -> Bool
+
+pub fn unicode_to_gb18030(Int) -> Int
+
+// Errors
+pub suberror IncompleteByteSequence String
+
+pub suberror InvalidByteSequence String
+
+pub suberror OutOfRange String
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+
