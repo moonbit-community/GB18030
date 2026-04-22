@@ -5,9 +5,9 @@ test "basic ascii test" {
     let result = decode_to_string(bytes)
     match result {
         Ok(s) => {
-            if s != "Hello" { let _ = panic; }
+            if s != "Hello" { panic() }
         }
-        Err(_) => { let _ = panic; }
+        Err(_) => { panic() }
     }
 }
 
@@ -191,62 +191,62 @@ test "all public functions" {
     let encode_result = encode_from_string(test_string)
     match encode_result {
         Ok(bytes) => {
-            if bytes.length() != 8 { let _ = panic; }
+            if bytes.length() != 8 { panic() }
         }
-        Err(_) => { let _ = panic; }
+        Err(_) => { panic() }
     }
     
     let encode_result2 = encode_from_string(test_string)
     match encode_result2 {
         Ok(bytes) => {
-            if bytes.length() != 8 { let _ = panic; }
+            if bytes.length() != 8 { panic() }
         }
-        Err(_) => { let _ = panic; }
+        Err(_) => { panic() }
     }
     
     let ascii_count = count_ascii_chars(test_string)
-    if ascii_count != 8 { let _ = panic; }
+    if ascii_count != 8 { panic() }
     
     let chinese_count = count_chinese_chars(test_string)
-    if chinese_count != 0 { let _ = panic; }
+    if chinese_count != 0 { panic() }
     
     let has_chinese = contains_chinese(test_string)
-    if has_chinese { let _ = panic; }
+    if has_chinese { panic() }
     
     let is_valid = is_valid_gb18030([0xB0, 0xA1])
-    if !is_valid { let _ = panic; }
+    if !is_valid { panic() }
     
     let is_invalid = is_valid_gb18030([0xFF, 0xFF])
-    if is_invalid { let _ = panic; }
+    if is_invalid { panic() }
     
     let is_lead = is_gb18030_lead(0xB0)
-    if !is_lead { let _ = panic; }
+    if !is_lead { panic() }
     
     let is_not_lead = is_gb18030_lead(0x7F)
-    if is_not_lead { let _ = panic; }
+    if is_not_lead { panic() }
     
     let is_trail = is_gb18030_trail(0xA1)
-    if !is_trail { let _ = panic; }
+    if !is_trail { panic() }
     
     let is_not_trail = is_gb18030_trail(0x7F)
-    if is_not_trail { let _ = panic; }
+    if is_not_trail { panic() }
     
     let length = get_gb18030_length(test_string)
-    if length != 8 { let _ = panic; }
+    if length != 8 { panic() }
 }
 
 test "unicode mapping" {
     let gb_code = unicode_to_gb18030(0x4E00)
-    if gb_code == 0x3F3F { let _ = panic; }
+    if gb_code == 0x3F3F { panic() }
     
     let unicode_code = gb18030_to_unicode(0xB0A1)
-    if unicode_code == 0x3F { let _ = panic; }
+    if unicode_code == 0x3F { panic() }
     
     let invalid_unicode = unicode_to_gb18030(0x1FFFFF)
-    if invalid_unicode != 0x3F3F { let _ = panic; }
+    if invalid_unicode != 0x3F3F { panic() }
     
     let invalid_gb = gb18030_to_unicode(0x7F7F)
-    if invalid_gb != 0x3F { let _ = panic; }
+    if invalid_gb != 0x3F { panic() }
 }
 
 test "error handling" {
@@ -254,9 +254,9 @@ test "error handling" {
     let decode_empty = decode_to_string(empty_bytes)
     match decode_empty {
         Ok(result) => {
-            if result != "" { let _ = panic; }
+            if result != "" { panic() }
         }
-        Err(_) => { let _ = panic; }
+        Err(_) => { panic() }
     }
     
     let invalid_bytes = [0xFF, 0xFF]
@@ -281,65 +281,65 @@ test "iterator functions" {
     match decode_iter_result {
         Ok(iter) => {
             let chars_list = iter.collect()
-            if chars_list.length() != 5 { let _ = panic; }
+            if chars_list.length() != 5 { panic() }
         }
-        Err(_) => { let _ = panic; }
+        Err(_) => { panic() }
     }
     
     let chars = ['H', 'e', 'l', 'l', 'o']
     let encode_iter_result = encode_from_iter(chars.iter())
     match encode_iter_result {
         Ok(bytes) => {
-            if bytes.length() != 5 { let _ = panic; }
+            if bytes.length() != 5 { panic() }
         }
-        Err(_) => { let _ = panic; }
+        Err(_) => { panic() }
     }
     
     let decode_array_result = decode_to_array(test_bytes)
     match decode_array_result {
         Ok(chars) => {
-            if chars.length() != 5 { let _ = panic; }
+            if chars.length() != 5 { panic() }
         }
-        Err(_) => { let _ = panic; }
+        Err(_) => { panic() }
     }
     
     let decode_count_result = decode(test_bytes)
     match decode_count_result {
         Ok(count) => {
-            if count != 5 { let _ = panic; }
+            if count != 5 { panic() }
         }
-        Err(_) => { let _ = panic; }
+        Err(_) => { panic() }
     }
 }
 
 test "secondary hanzi area" {
     let unicode1 = 0x9FA6
     let gb_result1 = unicode_to_gb18030(unicode1)
-    if gb_result1 == 0x3F3F { let _ = panic; }
+    if gb_result1 == 0x3F3F { panic() }
     
     let unicode2 = 0x9FEF
     let gb_result2 = unicode_to_gb18030(unicode2)
-    if gb_result2 == 0x3F3F { let _ = panic; }
+    if gb_result2 == 0x3F3F { panic() }
 }
 
 test "user defined area" {
     let unicode1 = 0xE000
     let gb_result1 = unicode_to_gb18030(unicode1)
-    if gb_result1 == 0x3F3F { let _ = panic; }
+    if gb_result1 == 0x3F3F { panic() }
     
     let unicode2 = 0xE864
     let gb_result2 = unicode_to_gb18030(unicode2)
-    if gb_result2 == 0x3F3F { let _ = panic; }
+    if gb_result2 == 0x3F3F { panic() }
 }
 
 test "four byte area" {
     let unicode1 = 0x10000
     let gb_result1 = unicode_to_gb18030(unicode1)
-    if gb_result1 == 0x3F3F { let _ = panic; }
+    if gb_result1 == 0x3F3F { panic() }
     
     let unicode2 = 0x10FFFF
     let gb_result2 = unicode_to_gb18030(unicode2)
-    if gb_result2 == 0x3F3F { let _ = panic; }
+    if gb_result2 == 0x3F3F { panic() }
 }
 
 test "massive gb18030 mapping test" {
@@ -772,12 +772,12 @@ test "字符串编码测试" {
                         let decode_result = decode_to_string(bytes)
                         match decode_result {
                             Ok(decoded) => {
-                                if decoded != s { let _ = panic; }
+                                if decoded != s { panic() }
                             }
-                            Err(_) => { let _ = panic; }
+                            Err(_) => { panic() }
                         }
                     }
-                    Err(_) => { let _ = panic; }
+                    Err(_) => { panic() }
                 }
                 
                 // 测试字符统计
@@ -793,11 +793,11 @@ test "字符串编码测试" {
                 }
                 
                 if has_chinese && chinese_count == 0 {
-                    let _ = panic;  // 逻辑错误
+                    panic()  // 逻辑错误
                 }
                 
                 if total_length < 0 {
-                    let _ = panic;  // 长度不应该为负
+                    panic()  // 长度不应该为负
                 }
             }
             None => ()
@@ -827,13 +827,13 @@ test "字符数组测试" {
                         match decode_result {
                             Ok(decoded_chars) => {
                                 if decoded_chars.length() != chars.length() {
-                                    let _ = panic;
+                                    panic()
                                 }
                             }
-                            Err(_) => { let _ = panic; }
+                            Err(_) => { panic() }
                         }
                     }
-                    Err(_) => { let _ = panic; }
+                    Err(_) => { panic() }
                 }
                 
                 let encode_iter_result = encode_from_iter(chars.iter())
@@ -844,13 +844,13 @@ test "字符数组测试" {
                             Ok(iter) => {
                                 let decoded_list = iter.collect()
                                 if decoded_list.length() != chars.length() {
-                                    let _ = panic;
+                                    panic()
                                 }
                             }
-                            Err(_) => { let _ = panic; }
+                            Err(_) => { panic() }
                         }
                     }
-                    Err(_) => { let _ = panic; }
+                    Err(_) => { panic() }
                 }
             }
             None => ()
@@ -1267,37 +1267,37 @@ test "极限字符串测试：覆盖所有字符串处理路径" {
                         let decode_string_result = decode_to_string(bytes)
                         match decode_string_result {
                             Ok(decoded) => {
-                                if decoded != s { let _ = panic; }
+                                if decoded != s { panic() }
                             }
-                            Err(_) => { let _ = panic; }
+                            Err(_) => { panic() }
                         }
                         
                         let decode_array_result = decode_to_array(bytes)
                         match decode_array_result {
                             Ok(chars) => {
-                                if chars.length() != s.length() { let _ = panic; }
+                                if chars.length() != s.length() { panic() }
                             }
-                            Err(_) => { let _ = panic; }
+                            Err(_) => { panic() }
                         }
                         
                         let decode_iter_result = decode_to_iter(bytes)
                         match decode_iter_result {
                             Ok(iter) => {
                                 let char_list = iter.collect()
-                                if char_list.length() != s.length() { let _ = panic; }
+                                if char_list.length() != s.length() { panic() }
                             }
-                            Err(_) => { let _ = panic; }
+                            Err(_) => { panic() }
                         }
                         
                         let decode_count_result = decode(bytes)
                         match decode_count_result {
                             Ok(count) => {
-                                if count != s.length() { let _ = panic; }
+                                if count != s.length() { panic() }
                             }
-                            Err(_) => { let _ = panic; }
+                            Err(_) => { panic() }
                         }
                     }
-                    Err(_) => { let _ = panic; }
+                    Err(_) => { panic() }
                 }
                 
                 // 测试字符统计函数
@@ -1307,11 +1307,11 @@ test "极限字符串测试：覆盖所有字符串处理路径" {
                 let gb_length = get_gb18030_length(s)
                 
                 // 验证统计结果
-                if ascii_count < 0 { let _ = panic; }
-                if chinese_count < 0 { let _ = panic; }
-                if gb_length < 0 { let _ = panic; }
-                if has_chinese && chinese_count == 0 { let _ = panic; }
-                if !has_chinese && chinese_count > 0 { let _ = panic; }
+                if ascii_count < 0 { panic() }
+                if chinese_count < 0 { panic() }
+                if gb_length < 0 { panic() }
+                if has_chinese && chinese_count == 0 { panic() }
+                if !has_chinese && chinese_count > 0 { panic() }
             }
             None => ()
         }
@@ -1343,12 +1343,12 @@ test "极限字符数组测试：覆盖所有字符数组处理路径" {
                         let decode_array_result = decode_to_array(bytes)
                         match decode_array_result {
                             Ok(decoded_chars) => {
-                                if decoded_chars.length() != chars.length() { let _ = panic; }
+                                if decoded_chars.length() != chars.length() { panic() }
                             }
-                            Err(_) => { let _ = panic; }
+                            Err(_) => { panic() }
                         }
                     }
-                    Err(_) => { let _ = panic; }
+                    Err(_) => { panic() }
                 }
                 
                 // 测试encode_from_iter
@@ -1359,9 +1359,9 @@ test "极限字符数组测试：覆盖所有字符数组处理路径" {
                         match decode_iter_result {
                             Ok(iter) => {
                                 let decoded_list = iter.collect()
-                                if decoded_list.length() != chars.length() { let _ = panic; }
+                                if decoded_list.length() != chars.length() { panic() }
                             }
-                            Err(_) => { let _ = panic; }
+                            Err(_) => { panic() }
                         }
                         
                         let decode_string_result = decode_to_string(bytes)
@@ -1376,7 +1376,7 @@ test "极限字符数组测试：覆盖所有字符数组处理路径" {
                             Err(_) => { () }
                         }
                     }
-                    Err(_) => { let _ = panic; }
+                    Err(_) => { panic() }
                 }
             }
             None => ()
