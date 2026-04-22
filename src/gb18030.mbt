@@ -176,7 +176,7 @@ pub fn encode(s: String) -> Result[Int, EncodeError] {
     let len = s.length()
     
     for i in 0..<len {
-        let c = s.unsafe_charcode_at(i)
+        let c = s.unsafe_get(i).to_int()
         if c <= 0x7F {
             byte_count = byte_count + 1
         } else {
@@ -676,7 +676,7 @@ pub fn encode_from_string(s: String) -> Result[Array[Int], EncodeError] {
     let len = s.length()
     
     for i in 0..<len {
-        let c = s.unsafe_charcode_at(i)
+        let c = s.unsafe_get(i).to_int()
         if c <= 0x7F {
             // ASCII 字符
             bytes.push(c)
@@ -766,7 +766,7 @@ pub fn get_gb18030_length(s: String) -> Int {
 pub fn contains_chinese(s: String) -> Bool {
     let len = s.length()
     for i in 0..<len {
-        let c = s.unsafe_charcode_at(i)
+        let c = s.unsafe_get(i).to_int()
         if c > 0x7F {
             return true
         }
@@ -779,7 +779,7 @@ pub fn count_ascii_chars(s: String) -> Int {
     let mut count = 0
     let len = s.length()
     for i in 0..<len {
-        let c = s.unsafe_charcode_at(i)
+        let c = s.unsafe_get(i).to_int()
         if c <= 0x7F {
             count = count + 1
         }
@@ -792,7 +792,7 @@ pub fn count_chinese_chars(s: String) -> Int {
     let mut count = 0
     let len = s.length()
     for i in 0..<len {
-        let c = s.unsafe_charcode_at(i)
+        let c = s.unsafe_get(i).to_int()
         if c > 0x7F {
             count = count + 1
         }
