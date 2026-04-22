@@ -177,10 +177,21 @@ pub fn encode(s: String) -> Result[Int, EncodeError] {
     
     for i in 0..<len {
         let c = s.unsafe_get(i).to_int()
+        if c < 0 || c > 0x10FFFF {
+            return Err(EncodeError::OutOfRange)
+        }
         if c <= 0x7F {
             byte_count = byte_count + 1
         } else {
-            byte_count = byte_count + 2
+            let gb_code = unicode_to_gb18030(c)
+            if gb_code == 0x3F3F {
+                return Err(EncodeError::UnsupportedCharacter)
+            }
+            if gb_code <= 0xFFFF {
+                byte_count = byte_count + 2
+            } else {
+                byte_count = byte_count + 4
+            }
         }
     }
     
@@ -677,16 +688,29 @@ pub fn encode_from_string(s: String) -> Result[Array[Int], EncodeError] {
     
     for i in 0..<len {
         let c = s.unsafe_get(i).to_int()
+        if c < 0 || c > 0x10FFFF {
+            return Err(EncodeError::OutOfRange)
+        }
         if c <= 0x7F {
             // ASCII 字符
             bytes.push(c)
         } else {
             // 中文字符使用映射表编码
             let gb_code = unicode_to_gb18030(c)
-            let lead_byte = (gb_code >> 8) & 0xFF
-            let trail_byte = gb_code & 0xFF
-            bytes.push(lead_byte)
-            bytes.push(trail_byte)
+            if gb_code == 0x3F3F {
+                return Err(EncodeError::UnsupportedCharacter)
+            }
+            if gb_code <= 0xFFFF {
+                let lead_byte = (gb_code >> 8) & 0xFF
+                let trail_byte = gb_code & 0xFF
+                bytes.push(lead_byte)
+                bytes.push(trail_byte)
+            } else {
+                bytes.push((gb_code >> 24) & 0xFF)
+                bytes.push((gb_code >> 16) & 0xFF)
+                bytes.push((gb_code >> 8) & 0xFF)
+                bytes.push(gb_code & 0xFF)
+            }
         }
     }
     
@@ -699,16 +723,29 @@ pub fn encode_from_array(chars: Array[Char]) -> Result[Array[Int], EncodeError] 
     
     for c in chars {
         let char_code = c.to_int()
+        if char_code < 0 || char_code > 0x10FFFF {
+            return Err(EncodeError::OutOfRange)
+        }
         if char_code <= 0x7F {
             // ASCII 字符
             bytes.push(char_code)
         } else {
             // 中文字符使用映射表编码
             let gb_code = unicode_to_gb18030(char_code)
-            let lead_byte = (gb_code >> 8) & 0xFF
-            let trail_byte = gb_code & 0xFF
-            bytes.push(lead_byte)
-            bytes.push(trail_byte)
+            if gb_code == 0x3F3F {
+                return Err(EncodeError::UnsupportedCharacter)
+            }
+            if gb_code <= 0xFFFF {
+                let lead_byte = (gb_code >> 8) & 0xFF
+                let trail_byte = gb_code & 0xFF
+                bytes.push(lead_byte)
+                bytes.push(trail_byte)
+            } else {
+                bytes.push((gb_code >> 24) & 0xFF)
+                bytes.push((gb_code >> 16) & 0xFF)
+                bytes.push((gb_code >> 8) & 0xFF)
+                bytes.push(gb_code & 0xFF)
+            }
         }
     }
     
