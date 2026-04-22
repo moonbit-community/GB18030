@@ -2,6 +2,7 @@
 // 基于 MoonBit core 库实现完整的 GB18030 编解码功能
 
 // 解码错误类型
+
 ///|
 pub enum DecodeError {
   InvalidByteSequence
@@ -231,153 +232,9 @@ pub fn decode_to_string(bytes : Array[Int]) -> Result[String, DecodeError] {
     match byte {
       Some(b) =>
         if is_ascii(b) {
-          // ASCII 字符直接转换
-          if b >= 0 && b <= 0x7F {
-            // 正确的ASCII字符处理
-            if b == 32 {
-              result = result + " "
-            } else if b >= 48 && b <= 57 {
-              // 数字 0-9
-              let digit = b - 48
-              if digit == 0 {
-                result = result + "0"
-              } else if digit == 1 {
-                result = result + "1"
-              } else if digit == 2 {
-                result = result + "2"
-              } else if digit == 3 {
-                result = result + "3"
-              } else if digit == 4 {
-                result = result + "4"
-              } else if digit == 5 {
-                result = result + "5"
-              } else if digit == 6 {
-                result = result + "6"
-              } else if digit == 7 {
-                result = result + "7"
-              } else if digit == 8 {
-                result = result + "8"
-              } else {
-                result = result + "9"
-              }
-            } else if b >= 65 && b <= 90 {
-              // 大写字母 A-Z
-              let letter = b - 65
-              if letter == 0 {
-                result = result + "A"
-              } else if letter == 1 {
-                result = result + "B"
-              } else if letter == 2 {
-                result = result + "C"
-              } else if letter == 3 {
-                result = result + "D"
-              } else if letter == 4 {
-                result = result + "E"
-              } else if letter == 5 {
-                result = result + "F"
-              } else if letter == 6 {
-                result = result + "G"
-              } else if letter == 7 {
-                result = result + "H"
-              } else if letter == 8 {
-                result = result + "I"
-              } else if letter == 9 {
-                result = result + "J"
-              } else if letter == 10 {
-                result = result + "K"
-              } else if letter == 11 {
-                result = result + "L"
-              } else if letter == 12 {
-                result = result + "M"
-              } else if letter == 13 {
-                result = result + "N"
-              } else if letter == 14 {
-                result = result + "O"
-              } else if letter == 15 {
-                result = result + "P"
-              } else if letter == 16 {
-                result = result + "Q"
-              } else if letter == 17 {
-                result = result + "R"
-              } else if letter == 18 {
-                result = result + "S"
-              } else if letter == 19 {
-                result = result + "T"
-              } else if letter == 20 {
-                result = result + "U"
-              } else if letter == 21 {
-                result = result + "V"
-              } else if letter == 22 {
-                result = result + "W"
-              } else if letter == 23 {
-                result = result + "X"
-              } else if letter == 24 {
-                result = result + "Y"
-              } else {
-                result = result + "Z"
-              }
-            } else if b >= 97 && b <= 122 {
-              // 小写字母 a-z
-              let letter = b - 97
-              if letter == 0 {
-                result = result + "a"
-              } else if letter == 1 {
-                result = result + "b"
-              } else if letter == 2 {
-                result = result + "c"
-              } else if letter == 3 {
-                result = result + "d"
-              } else if letter == 4 {
-                result = result + "e"
-              } else if letter == 5 {
-                result = result + "f"
-              } else if letter == 6 {
-                result = result + "g"
-              } else if letter == 7 {
-                result = result + "h"
-              } else if letter == 8 {
-                result = result + "i"
-              } else if letter == 9 {
-                result = result + "j"
-              } else if letter == 10 {
-                result = result + "k"
-              } else if letter == 11 {
-                result = result + "l"
-              } else if letter == 12 {
-                result = result + "m"
-              } else if letter == 13 {
-                result = result + "n"
-              } else if letter == 14 {
-                result = result + "o"
-              } else if letter == 15 {
-                result = result + "p"
-              } else if letter == 16 {
-                result = result + "q"
-              } else if letter == 17 {
-                result = result + "r"
-              } else if letter == 18 {
-                result = result + "s"
-              } else if letter == 19 {
-                result = result + "t"
-              } else if letter == 20 {
-                result = result + "u"
-              } else if letter == 21 {
-                result = result + "v"
-              } else if letter == 22 {
-                result = result + "w"
-              } else if letter == 23 {
-                result = result + "x"
-              } else if letter == 24 {
-                result = result + "y"
-              } else {
-                result = result + "z"
-              }
-            } else {
-              // 其他ASCII字符
-              result = result + "?"
-            }
-          } else {
-            result = result + "?"
+          match b.to_char() {
+            Some(ch) => result = result + ch.to_string()
+            None => return Err(DecodeError::InvalidByteSequence)
           }
           i = i + 1
         } else if is_gb18030_lead(b) {
