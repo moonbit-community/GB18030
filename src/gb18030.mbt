@@ -21,28 +21,28 @@ pub enum EncodeError {
 // 检查字节是否为ASCII
 
 ///|
-pub fn is_ascii(b : Int) -> Bool {
+pub fn is_ascii(b : Int32) -> Bool {
   b <= 0x7F
 }
 
 // 检查字节是否为GB18030双字节序列的第一个字节
 
 ///|
-pub fn is_gb18030_lead(b : Int) -> Bool {
+pub fn is_gb18030_lead(b : Int32) -> Bool {
   b >= 0x81 && b <= 0xFE
 }
 
 // 检查字节是否为GB18030双字节序列的第二个字节
 
 ///|
-pub fn is_gb18030_trail(b : Int) -> Bool {
+pub fn is_gb18030_trail(b : Int32) -> Bool {
   (b >= 0x40 && b <= 0x7E) || (b >= 0x80 && b <= 0xFE)
 }
 
 // GB18030 字符映射表 - 完整的映射实现
 
 ///|
-pub fn gb18030_to_unicode(gb_code : Int) -> Int {
+pub fn gb18030_to_unicode(gb_code : Int32) -> Int32 {
   // 完整的GB18030到Unicode映射
   if gb_code >= 0x8140 && gb_code <= 0xFEFE {
     // 双字节区域
@@ -102,7 +102,7 @@ pub fn gb18030_to_unicode(gb_code : Int) -> Int {
 // Unicode到GB18030映射 - 完整的映射实现
 
 ///|
-pub fn unicode_to_gb18030(unicode : Int) -> Int {
+pub fn unicode_to_gb18030(unicode : Int32) -> Int32 {
   // 完整的Unicode到GB18030映射
 
   // 一级汉字区域 (0x4E00-0x9FFF)
@@ -153,7 +153,7 @@ pub fn unicode_to_gb18030(unicode : Int) -> Int {
 // 解码函数 - 返回解码后的字符数量
 
 ///|
-pub fn decode(bytes : Array[Int]) -> Result[Int, DecodeError] {
+pub fn decode(bytes : Array[Int32]) -> Result[Int32, DecodeError] {
   let mut char_count = 0
   let mut i = 0
 
@@ -193,7 +193,7 @@ pub fn decode(bytes : Array[Int]) -> Result[Int, DecodeError] {
 // 编码函数 - 返回编码后的字节数量
 
 ///|
-pub fn encode(s : String) -> Result[Int, EncodeError] {
+pub fn encode(s : String) -> Result[Int32, EncodeError] {
   let mut byte_count = 0
   let len = s.length()
 
@@ -223,7 +223,7 @@ pub fn encode(s : String) -> Result[Int, EncodeError] {
 // 解码 GB18030 字节序列为字符串
 
 ///|
-pub fn decode_to_string(bytes : Array[Int]) -> Result[String, DecodeError] {
+pub fn decode_to_string(bytes : Array[Int32]) -> Result[String, DecodeError] {
   let mut result = ""
   let mut i = 0
 
@@ -482,7 +482,9 @@ pub fn decode_to_string(bytes : Array[Int]) -> Result[String, DecodeError] {
 // 解码 GB18030 字节序列为字符数组
 
 ///|
-pub fn decode_to_array(bytes : Array[Int]) -> Result[Array[Char], DecodeError] {
+pub fn decode_to_array(
+  bytes : Array[Int32],
+) -> Result[Array[Char], DecodeError] {
   let chars = []
   let mut i = 0
 
@@ -883,7 +885,7 @@ pub fn decode_to_array(bytes : Array[Int]) -> Result[Array[Char], DecodeError] {
 // 解码 GB18030 字节序列为字符迭代器
 
 ///|
-pub fn decode_to_iter(bytes : Array[Int]) -> Result[Iter[Char], DecodeError] {
+pub fn decode_to_iter(bytes : Array[Int32]) -> Result[Iter[Char], DecodeError] {
   let chars_result = decode_to_array(bytes)
   match chars_result {
     Ok(chars) => Ok(chars.iter())
@@ -894,7 +896,7 @@ pub fn decode_to_iter(bytes : Array[Int]) -> Result[Iter[Char], DecodeError] {
 // 编码字符串为 GB18030 字节序列
 
 ///|
-pub fn encode_from_string(s : String) -> Result[Array[Int], EncodeError] {
+pub fn encode_from_string(s : String) -> Result[Array[Int32], EncodeError] {
   let bytes = []
   let len = s.length()
 
@@ -934,7 +936,7 @@ pub fn encode_from_string(s : String) -> Result[Array[Int], EncodeError] {
 ///|
 pub fn encode_from_array(
   chars : Array[Char],
-) -> Result[Array[Int], EncodeError] {
+) -> Result[Array[Int32], EncodeError] {
   let bytes = []
 
   for c in chars {
@@ -971,7 +973,9 @@ pub fn encode_from_array(
 // 编码字符迭代器为 GB18030 字节序列
 
 ///|
-pub fn encode_from_iter(chars : Iter[Char]) -> Result[Array[Int], EncodeError] {
+pub fn encode_from_iter(
+  chars : Iter[Char],
+) -> Result[Array[Int32], EncodeError] {
   let chars_array = chars.collect()
   encode_from_array(chars_array)
 }
@@ -1010,7 +1014,7 @@ pub fn test_gb18030_check() -> Bool {
 // 验证字节序列是否为有效的GB18030编码
 
 ///|
-pub fn is_valid_gb18030(bytes : Array[Int]) -> Bool {
+pub fn is_valid_gb18030(bytes : Array[Int32]) -> Bool {
   let result = decode(bytes)
   match result {
     Ok(_) => true
@@ -1021,7 +1025,7 @@ pub fn is_valid_gb18030(bytes : Array[Int]) -> Bool {
 // 获取字符串的GB18030编码长度
 
 ///|
-pub fn get_gb18030_length(s : String) -> Int {
+pub fn get_gb18030_length(s : String) -> Int32 {
   let result = encode(s)
   match result {
     Ok(length) => length
@@ -1046,7 +1050,7 @@ pub fn contains_chinese(s : String) -> Bool {
 // 统计字符串中的ASCII字符数量
 
 ///|
-pub fn count_ascii_chars(s : String) -> Int {
+pub fn count_ascii_chars(s : String) -> Int32 {
   let mut count = 0
   let len = s.length()
   for i in 0..<len {
@@ -1061,7 +1065,7 @@ pub fn count_ascii_chars(s : String) -> Int {
 // 统计字符串中的中文字符数量
 
 ///|
-pub fn count_chinese_chars(s : String) -> Int {
+pub fn count_chinese_chars(s : String) -> Int32 {
   let mut count = 0
   let len = s.length()
   for i in 0..<len {
