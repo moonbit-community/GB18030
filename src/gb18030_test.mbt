@@ -3,7 +3,7 @@
 ///|
 test "basic ascii test" {
   let bytes = [72, 101, 108, 108, 111]
-  let result = decode_to_string(bytes)
+  let result = @GB18030.decode_to_string(bytes)
   match result {
     Ok(s) => if s != "Hello" { panic() }
     Err(_) => panic()
@@ -18,7 +18,7 @@ test "ascii digits hardcoded mapping" {
     match digits.get(i) {
       Some(d) => {
         let bytes = [d]
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -35,7 +35,7 @@ test "ascii uppercase hardcoded mapping" {
   let mut letter = 65
   while letter <= 90 {
     let bytes = [letter]
-    let result = decode_to_string(bytes)
+    let result = @GB18030.decode_to_string(bytes)
     match result {
       Ok(_) => ()
       Err(_) => ()
@@ -49,7 +49,7 @@ test "ascii lowercase hardcoded mapping" {
   let mut letter = 97
   while letter <= 122 {
     let bytes = [letter]
-    let result = decode_to_string(bytes)
+    let result = @GB18030.decode_to_string(bytes)
     match result {
       Ok(_) => ()
       Err(_) => ()
@@ -61,7 +61,7 @@ test "ascii lowercase hardcoded mapping" {
 ///|
 test "space character mapping" {
   let bytes = [32]
-  let result = decode_to_string(bytes)
+  let result = @GB18030.decode_to_string(bytes)
   match result {
     Ok(_) => ()
     Err(_) => ()
@@ -97,7 +97,7 @@ test "gb18030 basic mapping batch 1" {
   while i < codes.length() {
     match codes.get(i) {
       Some(bytes) => {
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -138,7 +138,7 @@ test "gb18030 basic mapping batch 2" {
   while i < codes.length() {
     match codes.get(i) {
       Some(bytes) => {
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -179,7 +179,7 @@ test "gb18030 basic mapping batch 3" {
   while i < codes.length() {
     match codes.get(i) {
       Some(bytes) => {
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -220,7 +220,7 @@ test "gb18030 basic mapping batch 4" {
   while i < codes.length() {
     match codes.get(i) {
       Some(bytes) => {
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -261,7 +261,7 @@ test "gb18030 basic mapping batch 5" {
   while i < codes.length() {
     match codes.get(i) {
       Some(bytes) => {
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -277,64 +277,64 @@ test "gb18030 basic mapping batch 5" {
 test "all public functions" {
   let test_string = "Hello123"
 
-  let encode_result = encode_from_string(test_string)
+  let encode_result = @GB18030.encode_from_string(test_string)
   match encode_result {
     Ok(bytes) => if bytes.length() != 8 { panic() }
     Err(_) => panic()
   }
 
-  let encode_result2 = encode_from_string(test_string)
+  let encode_result2 = @GB18030.encode_from_string(test_string)
   match encode_result2 {
     Ok(bytes) => if bytes.length() != 8 { panic() }
     Err(_) => panic()
   }
 
-  let ascii_count = count_ascii_chars(test_string)
+  let ascii_count = @GB18030.count_ascii_chars(test_string)
   if ascii_count != 8 {
     panic()
   }
 
-  let chinese_count = count_chinese_chars(test_string)
+  let chinese_count = @GB18030.count_chinese_chars(test_string)
   if chinese_count != 0 {
     panic()
   }
 
-  let has_chinese = contains_chinese(test_string)
+  let has_chinese = @GB18030.contains_chinese(test_string)
   if has_chinese {
     panic()
   }
 
-  let is_valid = is_valid_gb18030([0xB0, 0xA1])
+  let is_valid = @GB18030.is_valid_gb18030([0xB0, 0xA1])
   if !is_valid {
     panic()
   }
 
-  let is_invalid = is_valid_gb18030([0xFF, 0xFF])
+  let is_invalid = @GB18030.is_valid_gb18030([0xFF, 0xFF])
   if is_invalid {
     panic()
   }
 
-  let is_lead = is_gb18030_lead(0xB0)
+  let is_lead = @GB18030.is_gb18030_lead(0xB0)
   if !is_lead {
     panic()
   }
 
-  let is_not_lead = is_gb18030_lead(0x7F)
+  let is_not_lead = @GB18030.is_gb18030_lead(0x7F)
   if is_not_lead {
     panic()
   }
 
-  let is_trail = is_gb18030_trail(0xA1)
+  let is_trail = @GB18030.is_gb18030_trail(0xA1)
   if !is_trail {
     panic()
   }
 
-  let is_not_trail = is_gb18030_trail(0x7F)
+  let is_not_trail = @GB18030.is_gb18030_trail(0x7F)
   if is_not_trail {
     panic()
   }
 
-  let length = get_gb18030_length(test_string)
+  let length = @GB18030.get_gb18030_length(test_string)
   if length != 8 {
     panic()
   }
@@ -342,22 +342,22 @@ test "all public functions" {
 
 ///|
 test "unicode mapping" {
-  let gb_code = unicode_to_gb18030(0x4E00)
+  let gb_code = @GB18030.unicode_to_gb18030(0x4E00)
   if gb_code == 0x3F3F {
     panic()
   }
 
-  let unicode_code = gb18030_to_unicode(0xB0A1)
+  let unicode_code = @GB18030.gb18030_to_unicode(0xB0A1)
   if unicode_code == 0x3F {
     panic()
   }
 
-  let invalid_unicode = unicode_to_gb18030(0x1FFFFF)
+  let invalid_unicode = @GB18030.unicode_to_gb18030(0x1FFFFF)
   if invalid_unicode != 0x3F3F {
     panic()
   }
 
-  let invalid_gb = gb18030_to_unicode(0x7F7F)
+  let invalid_gb = @GB18030.gb18030_to_unicode(0x7F7F)
   if invalid_gb != 0x3F {
     panic()
   }
@@ -366,21 +366,21 @@ test "unicode mapping" {
 ///|
 test "error handling" {
   let empty_bytes = []
-  let decode_empty = decode_to_string(empty_bytes)
+  let decode_empty = @GB18030.decode_to_string(empty_bytes)
   match decode_empty {
     Ok(result) => if result != "" { panic() }
     Err(_) => panic()
   }
 
   let invalid_bytes = [0xFF, 0xFF]
-  let decode_invalid = decode_to_string(invalid_bytes)
+  let decode_invalid = @GB18030.decode_to_string(invalid_bytes)
   match decode_invalid {
     Ok(_) => ()
     Err(_) => ()
   }
 
   let incomplete_bytes = [0xB0]
-  let decode_incomplete = decode_to_string(incomplete_bytes)
+  let decode_incomplete = @GB18030.decode_to_string(incomplete_bytes)
   match decode_incomplete {
     Ok(_) => ()
     Err(_) => ()
@@ -391,7 +391,7 @@ test "error handling" {
 test "iterator functions" {
   let test_bytes = [72, 101, 108, 108, 111]
 
-  let decode_iter_result = decode_to_iter(test_bytes)
+  let decode_iter_result = @GB18030.decode_to_iter(test_bytes)
   match decode_iter_result {
     Ok(iter) => {
       let chars_list = iter.collect()
@@ -403,19 +403,19 @@ test "iterator functions" {
   }
 
   let chars = ['H', 'e', 'l', 'l', 'o']
-  let encode_iter_result = encode_from_iter(chars.iter())
+  let encode_iter_result = @GB18030.encode_from_iter(chars.iter())
   match encode_iter_result {
     Ok(bytes) => if bytes.length() != 5 { panic() }
     Err(_) => panic()
   }
 
-  let decode_array_result = decode_to_array(test_bytes)
+  let decode_array_result = @GB18030.decode_to_array(test_bytes)
   match decode_array_result {
     Ok(chars) => if chars.length() != 5 { panic() }
     Err(_) => panic()
   }
 
-  let decode_count_result = decode(test_bytes)
+  let decode_count_result = @GB18030.decode(test_bytes)
   match decode_count_result {
     Ok(count) => if count != 5 { panic() }
     Err(_) => panic()
@@ -425,13 +425,13 @@ test "iterator functions" {
 ///|
 test "secondary hanzi area" {
   let unicode1 = 0x9FA6
-  let gb_result1 = unicode_to_gb18030(unicode1)
+  let gb_result1 = @GB18030.unicode_to_gb18030(unicode1)
   if gb_result1 == 0x3F3F {
     panic()
   }
 
   let unicode2 = 0x9FEF
-  let gb_result2 = unicode_to_gb18030(unicode2)
+  let gb_result2 = @GB18030.unicode_to_gb18030(unicode2)
   if gb_result2 == 0x3F3F {
     panic()
   }
@@ -440,13 +440,13 @@ test "secondary hanzi area" {
 ///|
 test "user defined area" {
   let unicode1 = 0xE000
-  let gb_result1 = unicode_to_gb18030(unicode1)
+  let gb_result1 = @GB18030.unicode_to_gb18030(unicode1)
   if gb_result1 == 0x3F3F {
     panic()
   }
 
   let unicode2 = 0xE864
-  let gb_result2 = unicode_to_gb18030(unicode2)
+  let gb_result2 = @GB18030.unicode_to_gb18030(unicode2)
   if gb_result2 == 0x3F3F {
     panic()
   }
@@ -455,13 +455,13 @@ test "user defined area" {
 ///|
 test "four byte area" {
   let unicode1 = 0x10000
-  let gb_result1 = unicode_to_gb18030(unicode1)
+  let gb_result1 = @GB18030.unicode_to_gb18030(unicode1)
   if gb_result1 == 0x3F3F {
     panic()
   }
 
   let unicode2 = 0x10FFFF
-  let gb_result2 = unicode_to_gb18030(unicode2)
+  let gb_result2 = @GB18030.unicode_to_gb18030(unicode2)
   if gb_result2 == 0x3F3F {
     panic()
   }
@@ -479,19 +479,19 @@ test "massive gb18030 mapping test" {
       if lead_byte <= 0xFF && trail_byte <= 0xFF && trail_byte != 0x7F {
         let gb_bytes = [lead_byte, trail_byte]
 
-        let result = decode_to_string(gb_bytes)
+        let result = @GB18030.decode_to_string(gb_bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let array_result = decode_to_array(gb_bytes)
+        let array_result = @GB18030.decode_to_array(gb_bytes)
         match array_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let count_result = decode(gb_bytes)
+        let count_result = @GB18030.decode(gb_bytes)
         match count_result {
           Ok(_) => ()
           Err(_) => ()
@@ -511,7 +511,7 @@ test "special characters test" {
     match special.get(i) {
       Some(byte_val) => {
         let bytes = [byte_val]
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -531,7 +531,7 @@ test "boundary values" {
     match boundaries.get(i) {
       Some(byte_val) => {
         let bytes = [byte_val]
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -564,7 +564,7 @@ test "four byte sequences" {
   while i < sequences.length() {
     match sequences.get(i) {
       Some(bytes) => {
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -638,19 +638,19 @@ test "扩展基本汉字区域映射测试 - 覆盖更多offset" {
   while i < extended_codes.length() {
     match extended_codes.get(i) {
       Some(bytes) => {
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let array_result = decode_to_array(bytes)
+        let array_result = @GB18030.decode_to_array(bytes)
         match array_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let count_result = decode(bytes)
+        let count_result = @GB18030.decode(bytes)
         match count_result {
           Ok(_) => ()
           Err(_) => ()
@@ -676,19 +676,19 @@ test "更多区域的映射测试" {
       if lead_byte <= 0xFF && trail_byte <= 0x7E {
         let gb_bytes = [lead_byte, trail_byte]
 
-        let result = decode_to_string(gb_bytes)
+        let result = @GB18030.decode_to_string(gb_bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let array_result = decode_to_array(gb_bytes)
+        let array_result = @GB18030.decode_to_array(gb_bytes)
         match array_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let count_result = decode(gb_bytes)
+        let count_result = @GB18030.decode(gb_bytes)
         match count_result {
           Ok(_) => ()
           Err(_) => ()
@@ -714,19 +714,19 @@ test "高位trail字节测试" {
       if lead_byte <= 0xFF && trail_byte <= 0xFE {
         let gb_bytes = [lead_byte, trail_byte]
 
-        let result = decode_to_string(gb_bytes)
+        let result = @GB18030.decode_to_string(gb_bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let array_result = decode_to_array(gb_bytes)
+        let array_result = @GB18030.decode_to_array(gb_bytes)
         match array_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let count_result = decode(gb_bytes)
+        let count_result = @GB18030.decode(gb_bytes)
         match count_result {
           Ok(_) => ()
           Err(_) => ()
@@ -745,7 +745,7 @@ test "测试所有ASCII控制字符" {
   let mut byte_val = 0
   while byte_val <= 31 { // 控制字符范围
     let bytes = [byte_val]
-    let result = decode_to_string(bytes)
+    let result = @GB18030.decode_to_string(bytes)
     match result {
       Ok(_) => ()
       Err(_) => ()
@@ -761,7 +761,7 @@ test "测试所有ASCII可打印字符" {
   let mut byte_val = 33 // 从!开始
   while byte_val <= 126 { // 到~结束
     let bytes = [byte_val]
-    let result = decode_to_string(bytes)
+    let result = @GB18030.decode_to_string(bytes)
     match result {
       Ok(_) => ()
       Err(_) => ()
@@ -784,7 +784,7 @@ test "四字节序列的全面测试" {
         while b4 <= 0x39 {
           let four_bytes = [b1, b2, b3, b4]
 
-          let result = decode_to_string(four_bytes)
+          let result = @GB18030.decode_to_string(four_bytes)
           match result {
             Ok(_) => ()
             Err(_) => ()
@@ -818,11 +818,11 @@ test "更多Unicode范围测试" {
   while i < unicode_tests.length() {
     match unicode_tests.get(i) {
       Some(unicode_val) => {
-        let gb_code = unicode_to_gb18030(unicode_val)
+        let gb_code = @GB18030.unicode_to_gb18030(unicode_val)
         // 测试映射结果
         if gb_code != 0x3F3F {
           // 如果映射成功，尝试反向映射
-          let reverse_unicode = gb18030_to_unicode(gb_code)
+          let reverse_unicode = @GB18030.gb18030_to_unicode(gb_code)
           let _ = reverse_unicode // 使用结果
         }
       }
@@ -854,32 +854,32 @@ test "错误路径的详细测试" {
     match error_test_cases.get(i) {
       Some(bytes) => {
         // 测试所有解码函数
-        let result1 = decode_to_string(bytes)
+        let result1 = @GB18030.decode_to_string(bytes)
         match result1 {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let result2 = decode_to_array(bytes)
+        let result2 = @GB18030.decode_to_array(bytes)
         match result2 {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let result3 = decode_to_iter(bytes)
+        let result3 = @GB18030.decode_to_iter(bytes)
         match result3 {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let result4 = decode(bytes)
+        let result4 = @GB18030.decode(bytes)
         match result4 {
           Ok(_) => ()
           Err(_) => ()
         }
 
         // 测试验证函数
-        let is_valid = is_valid_gb18030(bytes)
+        let is_valid = @GB18030.is_valid_gb18030(bytes)
         let _ = is_valid
       }
       None => ()
@@ -920,19 +920,19 @@ test "大规模字符映射测试" {
   while i < large_test_codes.length() {
     match large_test_codes.get(i) {
       Some(bytes) => {
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let array_result = decode_to_array(bytes)
+        let array_result = @GB18030.decode_to_array(bytes)
         match array_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let count_result = decode(bytes)
+        let count_result = @GB18030.decode(bytes)
         match count_result {
           Ok(_) => ()
           Err(_) => ()
@@ -962,11 +962,11 @@ test "字符串编码测试" {
     match test_strings.get(i) {
       Some(s) => {
         // 测试编码函数
-        let encode_result = encode_from_string(s)
+        let encode_result = @GB18030.encode_from_string(s)
         match encode_result {
           Ok(bytes) => {
             // 测试解码回来
-            let decode_result = decode_to_string(bytes)
+            let decode_result = @GB18030.decode_to_string(bytes)
             match decode_result {
               Ok(decoded) => if decoded != s { panic() }
               Err(_) => panic()
@@ -976,10 +976,10 @@ test "字符串编码测试" {
         }
 
         // 测试字符统计
-        let ascii_count = count_ascii_chars(s)
-        let chinese_count = count_chinese_chars(s)
-        let has_chinese = contains_chinese(s)
-        let total_length = get_gb18030_length(s)
+        let ascii_count = @GB18030.count_ascii_chars(s)
+        let chinese_count = @GB18030.count_chinese_chars(s)
+        let has_chinese = @GB18030.contains_chinese(s)
+        let total_length = @GB18030.get_gb18030_length(s)
 
         // 验证统计结果的一致性
         if ascii_count + chinese_count != s.length() {
@@ -1017,10 +1017,10 @@ test "字符数组测试" {
   while i < char_arrays.length() {
     match char_arrays.get(i) {
       Some(chars) => {
-        let encode_result = encode_from_array(chars)
+        let encode_result = @GB18030.encode_from_array(chars)
         match encode_result {
           Ok(bytes) => {
-            let decode_result = decode_to_array(bytes)
+            let decode_result = @GB18030.decode_to_array(bytes)
             match decode_result {
               Ok(decoded_chars) =>
                 if decoded_chars.length() != chars.length() {
@@ -1032,10 +1032,10 @@ test "字符数组测试" {
           Err(_) => panic()
         }
 
-        let encode_iter_result = encode_from_iter(chars.iter())
+        let encode_iter_result = @GB18030.encode_from_iter(chars.iter())
         match encode_iter_result {
           Ok(bytes) => {
-            let decode_iter_result = decode_to_iter(bytes)
+            let decode_iter_result = @GB18030.decode_to_iter(bytes)
             match decode_iter_result {
               Ok(iter) => {
                 let decoded_list = iter.collect()
@@ -1065,7 +1065,7 @@ test "边界条件的详细测试" {
   while i < lead_boundary_tests.length() {
     match lead_boundary_tests.get(i) {
       Some(lead) => {
-        let is_lead_result = is_gb18030_lead(lead)
+        let is_lead_result = @GB18030.is_gb18030_lead(lead)
         let _ = is_lead_result
 
         // 如果是有效的lead字节，测试与各种trail字节的组合
@@ -1076,7 +1076,7 @@ test "边界条件的详细测试" {
             match trail_tests.get(j) {
               Some(trail) => {
                 let gb_bytes = [lead, trail]
-                let result = decode_to_string(gb_bytes)
+                let result = @GB18030.decode_to_string(gb_bytes)
                 match result {
                   Ok(_) => ()
                   Err(_) => ()
@@ -1099,7 +1099,7 @@ test "边界条件的详细测试" {
   while i < trail_boundary_tests.length() {
     match trail_boundary_tests.get(i) {
       Some(trail) => {
-        let is_trail_result = is_gb18030_trail(trail)
+        let is_trail_result = @GB18030.is_gb18030_trail(trail)
         let _ = is_trail_result
       }
       None => ()
@@ -1129,11 +1129,11 @@ test "混合内容的全面测试" {
     match mixed_test_data.get(i) {
       Some(bytes) => {
         // 测试所有解码函数
-        let string_result = decode_to_string(bytes)
+        let string_result = @GB18030.decode_to_string(bytes)
         match string_result {
           Ok(s) => {
             // 测试往返编码
-            let re_encode_result = encode_from_string(s)
+            let re_encode_result = @GB18030.encode_from_string(s)
             match re_encode_result {
               Ok(re_bytes) => {
                 // 验证往返编码的一致性
@@ -1145,11 +1145,11 @@ test "混合内容的全面测试" {
           Err(_) => ()
         }
 
-        let array_result = decode_to_array(bytes)
+        let array_result = @GB18030.decode_to_array(bytes)
         match array_result {
           Ok(chars) => {
             // 测试字符数组的往返编码
-            let re_encode_result = encode_from_array(chars)
+            let re_encode_result = @GB18030.encode_from_array(chars)
             match re_encode_result {
               Ok(re_bytes) => {
                 let _ = re_bytes
@@ -1158,7 +1158,7 @@ test "混合内容的全面测试" {
             }
 
             // 测试迭代器编码
-            let iter_encode_result = encode_from_iter(chars.iter())
+            let iter_encode_result = @GB18030.encode_from_iter(chars.iter())
             match iter_encode_result {
               Ok(iter_bytes) => {
                 let _ = iter_bytes
@@ -1169,7 +1169,7 @@ test "混合内容的全面测试" {
           Err(_) => ()
         }
 
-        let iter_result = decode_to_iter(bytes)
+        let iter_result = @GB18030.decode_to_iter(bytes)
         match iter_result {
           Ok(iter) => {
             let char_list = iter.collect()
@@ -1178,7 +1178,7 @@ test "混合内容的全面测试" {
           Err(_) => ()
         }
 
-        let count_result = decode(bytes)
+        let count_result = @GB18030.decode(bytes)
         match count_result {
           Ok(count) => {
             let _ = count
@@ -1203,7 +1203,7 @@ test "超大规模测试：系统性覆盖所有可能的GB18030编码组合" {
     while trail <= 0x7E {
       if trail != 0x7F {
         let gb_bytes = [lead, trail]
-        let result = decode_to_string(gb_bytes)
+        let result = @GB18030.decode_to_string(gb_bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
@@ -1215,7 +1215,7 @@ test "超大规模测试：系统性覆盖所有可能的GB18030编码组合" {
     let mut trail = 0x80
     while trail <= 0xFE {
       let gb_bytes = [lead, trail]
-      let result = decode_to_string(gb_bytes)
+      let result = @GB18030.decode_to_string(gb_bytes)
       match result {
         Ok(_) => ()
         Err(_) => ()
@@ -1235,25 +1235,25 @@ test "极限ASCII测试：覆盖所有ASCII字符的硬编码映射" {
   let mut byte_val = 0
   while byte_val <= 127 {
     let bytes = [byte_val]
-    let result = decode_to_string(bytes)
+    let result = @GB18030.decode_to_string(bytes)
     match result {
       Ok(_) => ()
       Err(_) => ()
     }
 
-    let array_result = decode_to_array(bytes)
+    let array_result = @GB18030.decode_to_array(bytes)
     match array_result {
       Ok(_) => ()
       Err(_) => ()
     }
 
-    let iter_result = decode_to_iter(bytes)
+    let iter_result = @GB18030.decode_to_iter(bytes)
     match iter_result {
       Ok(_) => ()
       Err(_) => ()
     }
 
-    let count_result = decode(bytes)
+    let count_result = @GB18030.decode(bytes)
     match count_result {
       Ok(_) => ()
       Err(_) => ()
@@ -1277,25 +1277,25 @@ test "极限四字节测试：覆盖更多四字节序列" {
         while b4 <= 0x39 {
           let four_bytes = [b1, b2, b3, b4]
 
-          let result = decode_to_string(four_bytes)
+          let result = @GB18030.decode_to_string(four_bytes)
           match result {
             Ok(_) => ()
             Err(_) => ()
           }
 
-          let array_result = decode_to_array(four_bytes)
+          let array_result = @GB18030.decode_to_array(four_bytes)
           match array_result {
             Ok(_) => ()
             Err(_) => ()
           }
 
-          let iter_result = decode_to_iter(four_bytes)
+          let iter_result = @GB18030.decode_to_iter(four_bytes)
           match iter_result {
             Ok(_) => ()
             Err(_) => ()
           }
 
-          let count_result = decode(four_bytes)
+          let count_result = @GB18030.decode(four_bytes)
           match count_result {
             Ok(_) => ()
             Err(_) => ()
@@ -1347,8 +1347,8 @@ test "极限Unicode测试：覆盖所有Unicode范围" {
   while i < unicode_ranges.length() {
     match unicode_ranges.get(i) {
       Some(unicode_val) => {
-        let gb_code = unicode_to_gb18030(unicode_val)
-        let reverse_unicode = gb18030_to_unicode(gb_code)
+        let gb_code = @GB18030.unicode_to_gb18030(unicode_val)
+        let reverse_unicode = @GB18030.gb18030_to_unicode(gb_code)
         let _ = reverse_unicode
       }
       None => ()
@@ -1412,31 +1412,31 @@ test "极限错误测试：覆盖所有错误路径" {
   while i < error_cases.length() {
     match error_cases.get(i) {
       Some(bytes) => {
-        let result = decode_to_string(bytes)
+        let result = @GB18030.decode_to_string(bytes)
         match result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let array_result = decode_to_array(bytes)
+        let array_result = @GB18030.decode_to_array(bytes)
         match array_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let iter_result = decode_to_iter(bytes)
+        let iter_result = @GB18030.decode_to_iter(bytes)
         match iter_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let count_result = decode(bytes)
+        let count_result = @GB18030.decode(bytes)
         match count_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let is_valid = is_valid_gb18030(bytes)
+        let is_valid = @GB18030.is_valid_gb18030(bytes)
         let _ = is_valid
       }
       None => ()
@@ -1473,23 +1473,23 @@ test "极限字符串测试：覆盖所有字符串处理路径" {
     match complex_strings.get(i) {
       Some(s) => {
         // 测试所有编码函数
-        let encode_result = encode_from_string(s)
+        let encode_result = @GB18030.encode_from_string(s)
         match encode_result {
           Ok(bytes) => {
             // 测试所有解码函数
-            let decode_string_result = decode_to_string(bytes)
+            let decode_string_result = @GB18030.decode_to_string(bytes)
             match decode_string_result {
               Ok(decoded) => if decoded != s { panic() }
               Err(_) => panic()
             }
 
-            let decode_array_result = decode_to_array(bytes)
+            let decode_array_result = @GB18030.decode_to_array(bytes)
             match decode_array_result {
               Ok(chars) => if chars.length() != s.length() { panic() }
               Err(_) => panic()
             }
 
-            let decode_iter_result = decode_to_iter(bytes)
+            let decode_iter_result = @GB18030.decode_to_iter(bytes)
             match decode_iter_result {
               Ok(iter) => {
                 let char_list = iter.collect()
@@ -1500,7 +1500,7 @@ test "极限字符串测试：覆盖所有字符串处理路径" {
               Err(_) => panic()
             }
 
-            let decode_count_result = decode(bytes)
+            let decode_count_result = @GB18030.decode(bytes)
             match decode_count_result {
               Ok(count) => if count != s.length() { panic() }
               Err(_) => panic()
@@ -1510,10 +1510,10 @@ test "极限字符串测试：覆盖所有字符串处理路径" {
         }
 
         // 测试字符统计函数
-        let ascii_count = count_ascii_chars(s)
-        let chinese_count = count_chinese_chars(s)
-        let has_chinese = contains_chinese(s)
-        let gb_length = get_gb18030_length(s)
+        let ascii_count = @GB18030.count_ascii_chars(s)
+        let chinese_count = @GB18030.count_chinese_chars(s)
+        let has_chinese = @GB18030.contains_chinese(s)
+        let gb_length = @GB18030.get_gb18030_length(s)
 
         // 验证统计结果
         if ascii_count < 0 {
@@ -1558,10 +1558,10 @@ test "极限字符数组测试：覆盖所有字符数组处理路径" {
     match complex_char_arrays.get(i) {
       Some(chars) => {
         // 测试encode_from_array
-        let encode_array_result = encode_from_array(chars)
+        let encode_array_result = @GB18030.encode_from_array(chars)
         match encode_array_result {
           Ok(bytes) => {
-            let decode_array_result = decode_to_array(bytes)
+            let decode_array_result = @GB18030.decode_to_array(bytes)
             match decode_array_result {
               Ok(decoded_chars) =>
                 if decoded_chars.length() != chars.length() {
@@ -1574,10 +1574,10 @@ test "极限字符数组测试：覆盖所有字符数组处理路径" {
         }
 
         // 测试encode_from_iter
-        let encode_iter_result = encode_from_iter(chars.iter())
+        let encode_iter_result = @GB18030.encode_from_iter(chars.iter())
         match encode_iter_result {
           Ok(bytes) => {
-            let decode_iter_result = decode_to_iter(bytes)
+            let decode_iter_result = @GB18030.decode_to_iter(bytes)
             match decode_iter_result {
               Ok(iter) => {
                 let decoded_list = iter.collect()
@@ -1588,13 +1588,13 @@ test "极限字符数组测试：覆盖所有字符数组处理路径" {
               Err(_) => panic()
             }
 
-            let decode_string_result = decode_to_string(bytes)
+            let decode_string_result = @GB18030.decode_to_string(bytes)
             match decode_string_result {
               Ok(_) => ()
               Err(_) => ()
             }
 
-            let decode_count_result = decode(bytes)
+            let decode_count_result = @GB18030.decode(bytes)
             match decode_count_result {
               Ok(_) => ()
               Err(_) => ()
@@ -1645,14 +1645,14 @@ test "极限验证测试：覆盖所有验证函数的路径" {
     match validation_test_cases.get(i) {
       Some(bytes) => {
         // 测试验证函数
-        let is_valid = is_valid_gb18030(bytes)
+        let is_valid = @GB18030.is_valid_gb18030(bytes)
         let _ = is_valid
 
         // 如果字节数组长度合适，测试lead和trail检查
         if bytes.length() >= 1 {
           match bytes.get(0) {
             Some(first_byte) => {
-              let is_lead = is_gb18030_lead(first_byte)
+              let is_lead = @GB18030.is_gb18030_lead(first_byte)
               let _ = is_lead
             }
             None => ()
@@ -1662,7 +1662,7 @@ test "极限验证测试：覆盖所有验证函数的路径" {
         if bytes.length() >= 2 {
           match bytes.get(1) {
             Some(second_byte) => {
-              let is_trail = is_gb18030_trail(second_byte)
+              let is_trail = @GB18030.is_gb18030_trail(second_byte)
               let _ = is_trail
             }
             None => ()
@@ -1670,25 +1670,25 @@ test "极限验证测试：覆盖所有验证函数的路径" {
         }
 
         // 测试解码函数
-        let decode_result = decode_to_string(bytes)
+        let decode_result = @GB18030.decode_to_string(bytes)
         match decode_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let array_result = decode_to_array(bytes)
+        let array_result = @GB18030.decode_to_array(bytes)
         match array_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let iter_result = decode_to_iter(bytes)
+        let iter_result = @GB18030.decode_to_iter(bytes)
         match iter_result {
           Ok(_) => ()
           Err(_) => ()
         }
 
-        let count_result = decode(bytes)
+        let count_result = @GB18030.decode(bytes)
         match count_result {
           Ok(_) => ()
           Err(_) => ()
@@ -1705,7 +1705,7 @@ test "调试测试：理解实际的GB18030映射" {
   // 测试已知的GB18030字节序列
   // 从之前的测试我们知道 [0xB0, 0xA1] 对应 "啊"
   let bytes_ah = [0xB0, 0xA1]
-  match decode_to_string(bytes_ah) {
+  match @GB18030.decode_to_string(bytes_ah) {
     Ok(s) => {
       let _ = s // 显式忽略结果
     }
@@ -1722,7 +1722,7 @@ test "调试测试：理解实际的GB18030映射" {
   ]
 
   for seq in test_sequences {
-    match decode_to_string(seq) {
+    match @GB18030.decode_to_string(seq) {
       Ok(s) => {
         let _ = s // 显式忽略结果
       }
@@ -1738,7 +1738,7 @@ test "验证测试：确认GB18030字节序列计算" {
   // 让我们先测试一个已知有效的字节序列
   // 从之前的测试我们知道 [0xB0, 0xA1] 可以成功解码
   let known_bytes = [0xB0, 0xA1]
-  match decode_to_string(known_bytes) {
+  match @GB18030.decode_to_string(known_bytes) {
     Ok(s) => {
       // 不管结果是什么，我们只是想确认它能工作
       let _ = s
@@ -1748,7 +1748,7 @@ test "验证测试：确认GB18030字节序列计算" {
 
   // 测试gb18030_to_unicode函数对于这个字节序列
   let gb_code = 0xB0A1 // [0xB0, 0xA1]
-  let unicode = gb18030_to_unicode(gb_code)
+  let unicode = @GB18030.gb18030_to_unicode(gb_code)
   // 不验证具体值，只要不是错误值0x3F就行
   if unicode == 0x3F {
     panic()
@@ -1756,7 +1756,7 @@ test "验证测试：确认GB18030字节序列计算" {
 
   // 现在测试 [0xB0, 0x40]
   let test_bytes = [0xB0, 0x40]
-  match decode_to_string(test_bytes) {
+  match @GB18030.decode_to_string(test_bytes) {
     Ok(s) => {
       // 接受任何成功的结果，不强制要求特定字符
       let _ = s
@@ -1773,12 +1773,12 @@ test "二级汉字区域测试：覆盖unicode_to_gb18030第100和104行" {
   let unicode_values = [0x9FA6, 0x9FA7, 0x9FA8, 0x9FEF]
 
   for unicode in unicode_values {
-    let gb_code = unicode_to_gb18030(unicode)
+    let gb_code = @GB18030.unicode_to_gb18030(unicode)
     // 接受任何结果，包括错误值，我们只是想覆盖这些行
     let _ = gb_code
 
     // 测试反向转换，也接受任何结果
-    let back_unicode = gb18030_to_unicode(gb_code)
+    let back_unicode = @GB18030.gb18030_to_unicode(gb_code)
     let _ = back_unicode
   }
 }
@@ -1789,12 +1789,12 @@ test "用户自定义区域测试：覆盖unicode_to_gb18030相关行" {
   let unicode_values = [0xE000, 0xE001, 0xE100, 0xE864]
 
   for unicode in unicode_values {
-    let gb_code = unicode_to_gb18030(unicode)
+    let gb_code = @GB18030.unicode_to_gb18030(unicode)
     // 接受任何结果，包括错误值，我们只是想覆盖这些行
     let _ = gb_code
 
     // 测试反向转换，也接受任何结果
-    let back_unicode = gb18030_to_unicode(gb_code)
+    let back_unicode = @GB18030.gb18030_to_unicode(gb_code)
     let _ = back_unicode
   }
 }
@@ -1812,17 +1812,17 @@ test "覆盖其他未覆盖行的测试" {
   ]
 
   for seq in invalid_sequences {
-    match decode_to_string(seq) {
+    match @GB18030.decode_to_string(seq) {
       Ok(_) => panic() // 应该失败
       Err(_) => () // 期望的错误
     }
 
-    match decode_to_array(seq) {
+    match @GB18030.decode_to_array(seq) {
       Ok(_) => panic() // 应该失败
       Err(_) => () // 期望的错误
     }
 
-    match decode(seq) {
+    match @GB18030.decode(seq) {
       Ok(_) => panic() // 应该失败
       Err(_) => () // 期望的错误
     }
@@ -1946,7 +1946,7 @@ test "系统性硬编码字符映射测试：覆盖所有offset 0-99" {
 
   for mapping in hardcoded_mappings {
     let (bytes, expected_char) = mapping
-    match decode_to_string(bytes) {
+    match @GB18030.decode_to_string(bytes) {
       Ok(s) => if s != expected_char { panic() }
       Err(_) => panic()
     }
@@ -1956,7 +1956,7 @@ test "系统性硬编码字符映射测试：覆盖所有offset 0-99" {
   // offset=100: area=0x2F, pos=100
   // pos=100 >= 63，所以trail = 0x80 + (100-63) = 0x80 + 37 = 0xA5
   let bytes_default = [0xB0, 0xA5]
-  match decode_to_string(bytes_default) {
+  match @GB18030.decode_to_string(bytes_default) {
     Ok(s) => if s != "字" { panic() }
     Err(_) => panic()
   }
